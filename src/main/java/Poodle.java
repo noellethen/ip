@@ -25,8 +25,10 @@ public class Poodle {
             """;
     private static final String LIST_COMMAND = "list";
     private static final int MAX_TASKS = 100;
-    private static final String[] tasks = new String[MAX_TASKS];
+    private static final Task[] tasks = new Task[MAX_TASKS];
     private static int taskCount = 0;
+    private static final String MARK_COMMAND = "mark";
+    private static final String UNMARK_COMMAND = "unmark";
 
     private static void processInput(Scanner sc) {
         String input;
@@ -35,20 +37,64 @@ public class Poodle {
             if (EXIT_COMMAND.equals(input)) {
                 break;
             }
-            if (input.isEmpty()) {
-                System.out.println("why empty >:c enter something!!");
-            } else if (input.equals(LIST_COMMAND)) {
-                showTasks();
-            } else {
-                addTask(input);
+            processLine(input);
+        }
+    }
+
+    private static void processLine(String input) {
+        if (input.isEmpty()) {
+            System.out.println("why empty >:c enter something!!");
+        } else if (input.equals(LIST_COMMAND)) {
+            showTasks();
+        } else if (input.startsWith(MARK_COMMAND + " ")) {
+            handleMark(input.substring(MARK_COMMAND.length()).trim());
+        } else if (input.startsWith(UNMARK_COMMAND + " ")) {
+            handleUnmark(input.substring(UNMARK_COMMAND.length()).trim());
+        } else {
+            addTask(input);
+        }
+    }
+
+    private static void handleMark(String input) {
+        try {
+            int idx = Integer.parseInt(input);
+            if (idx < 1 || idx > taskCount) {
+                System.out.println("which task is that? >< from 1-100 pls!");
+                return;
             }
+
+            tasks[idx - 1].markAsDone();
+            printDivider();
+            System.out.println("yay good job! the task is done c:");
+            System.out.println(" " + tasks[idx - 1]);
+            printDivider();
+        } catch (NumberFormatException e) {
+            System.out.println("enter something like this: mark 2");
+        }
+    }
+
+    private static void handleUnmark(String input) {
+        try {
+            int idx = Integer.parseInt(input);
+            if (idx < 1 || idx > taskCount) {
+                System.out.println("which task is that? >< from 1-100 pls!");
+                return;
+            }
+
+            tasks[idx - 1].unmarkAsDone();
+            printDivider();
+            System.out.println("oh nooo go do your task :c");
+            System.out.println(" " + tasks[idx - 1]);
+            printDivider();
+        } catch (NumberFormatException e) {
+            System.out.println("enter something like this: unmark 2");
         }
     }
 
     private static void addTask(String input) {
         printDivider();
         if (taskCount < MAX_TASKS) {
-            tasks[taskCount] = input;
+            tasks[taskCount] = new Task(input);
             taskCount++;
             System.out.println("yay :D added: " + input);
         } else {
@@ -63,7 +109,7 @@ public class Poodle {
             System.out.println("no tasks to show :c add one?");
         } else {
             for (int i = 0; i < taskCount; i++) {
-                System.out.println((i + 1) + ". " + tasks[i]);
+                System.out.println((i + 1) + ". " + tasks[i].toString());
             }
         }
         printDivider();
