@@ -111,8 +111,10 @@ public class Poodle {
         }
 
         printDivider();
+        System.out.println("okie i added your task:");
         System.out.println(t);
         System.out.println("now you have " + Task.getTaskCount() + " tasks to dooo");
+        printDivider();
     }
 
     private static void showTasks() {
@@ -152,10 +154,6 @@ public class Poodle {
                 break;
             }
 
-            if (input.equals(LIST_COMMAND)) {
-                showTasks();
-            }
-
             String firstWord = returnFirstWord(input);
             switch (firstWord) {
             case TODO_COMMAND:
@@ -166,6 +164,9 @@ public class Poodle {
             case MARK_COMMAND:
             case UNMARK_COMMAND:
                 handleMark(firstWord, input);
+                break;
+            case LIST_COMMAND:
+                showTasks();
                 break;
             default:
                 echo(input);
