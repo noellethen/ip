@@ -1,0 +1,7 @@
+todo do homework
+deadline complete assignment /by sunday
+event go for tuition /from 9am /to 11am
+mark 2
+list
+unmark 2
+bye
