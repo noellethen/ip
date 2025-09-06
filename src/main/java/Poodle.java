@@ -1,7 +1,6 @@
 import java.util.Scanner;
 
 public class Poodle {
-
     // Text for greet and exit messages
     private static final String DIVIDER = "--------------------------------------------";
     private static final String ENTRY_TEXT = """
@@ -46,65 +45,81 @@ public class Poodle {
                 return;
             }
 
-            Task t = Task.getTaskList()[taskNumber - 1];
+            Task task = Task.getTaskList()[taskNumber - 1];
             if (firstWord.equals(MARK_COMMAND)) {
-                t.markAsDone();
+                task.markAsDone();
                 printDivider();
                 System.out.println("yay good job! the task is done c:");
-                System.out.println(" " + t);
+                System.out.println(" " + task);
                 printDivider();
             } else if (firstWord.equals(UNMARK_COMMAND)) {
-                t.unmarkAsDone();
+                task.unmarkAsDone();
                 printDivider();
                 System.out.println("oh nooo go do your task :c");
-                System.out.println(" " + t);
+                System.out.println(" " + task);
                 printDivider();
             }
         } catch (NumberFormatException e) {
+            printDivider();
             System.out.println("enter something like this: mark 2");
+            printDivider();
         }
     }
 
     private static Todo processTodo(String input) {
-        int firstSpaceIndex = input.indexOf(' ');
-        String description = input.substring(firstSpaceIndex + 1);
+        int firstSpaceIndex = input.indexOf(' ') + 1;
 
+        if (firstSpaceIndex == 0) {
+            throw new IllegalArgumentException("todo what?? input something after todo!");
+        }
+
+        String description = input.substring(firstSpaceIndex);
         return new Todo(description);
     }
 
     private static Deadline processDeadline(String input) {
-        int firstSpaceIndex = input.indexOf(' ');
+        int firstSpaceIndex = input.indexOf(' ') + 1;
+
+        if (firstSpaceIndex == 0) {
+            throw new IllegalArgumentException("what has a deadline?? input something after deadline!");
+        }
+
         int byIndex = input.indexOf("/by");
         String by = input.substring(byIndex + SLASH_BY_LENGTH);
-        String description = input.substring(firstSpaceIndex + 1, byIndex - 1);
+        String description = input.substring(firstSpaceIndex, byIndex - 1);
 
         return new Deadline(description, by);
 
     }
 
     private static Event processEvent(String input) {
-        int firstSpaceIndex = input.indexOf(' ');
+        int firstSpaceIndex = input.indexOf(' ') + 1;
+
+        if (firstSpaceIndex == 0) {
+            throw new IllegalArgumentException("what event?? input something after event!");
+        }
+
         int fromIndex = input.indexOf("/from");
         int toIndex = input.indexOf("/to");
         String from = input.substring(fromIndex + SLASH_FROM_LENGTH, toIndex - 1);
         String to = input.substring(toIndex + SLASH_TO_LENGTH);
-        String description = input.substring(firstSpaceIndex + 1, fromIndex - 1);
+        String description = input.substring(firstSpaceIndex, fromIndex - 1);
 
         return new Event(description, from, to);
     }
 
     private static void processTasks(String firstWord, String input) {
-        Task t = null;
+        Task task = null;
 
         switch (firstWord) {
         case TODO_COMMAND:
-            t = processTodo(input);
+            task = processTodo(input);
             break;
         case DEADLINE_COMMAND:
-            t = processDeadline(input);
+            task = processDeadline(input);
             break;
         case EVENT_COMMAND:
-            t = processEvent(input);
+            task = processEvent(input);
             break;
         default:
             System.out.println("what do you want me to do for you?");
@@ -112,7 +127,7 @@ public class Poodle {
 
         printDivider();
         System.out.println("okie i added your task:");
-        System.out.println(t);
+        System.out.println(task);
         System.out.println("now you have " + Task.getTaskCount() + " tasks to dooo");
         printDivider();
     }
@@ -138,12 +153,6 @@ public class Poodle {
         System.out.println(DIVIDER);
     }
 
-    private static void echo(String input) {
-        printDivider();
-        System.out.println(input);
-        printDivider();
-    }
-
     private static void runPoodle() {
         Scanner sc = new Scanner(System.in);
         String input;
@@ -153,23 +162,30 @@ public class Poodle {
             if (EXIT_COMMAND.equals(input)) {
                 break;
             }
-
-            String firstWord = returnFirstWord(input);
-            switch (firstWord) {
-            case TODO_COMMAND:
-            case DEADLINE_COMMAND:
-            case EVENT_COMMAND:
-                processTasks(firstWord, input);
-                break;
-            case MARK_COMMAND:
-            case UNMARK_COMMAND:
-                handleMark(firstWord, input);
-                break;
-            case LIST_COMMAND:
-                showTasks();
-                break;
-            default:
-                echo(input);
+            try {
+                String firstWord = returnFirstWord(input);
+                switch (firstWord) {
+                case TODO_COMMAND:
+                case DEADLINE_COMMAND:
+                case EVENT_COMMAND:
+                    processTasks(firstWord, input);
+                    break;
+                case MARK_COMMAND:
+                case UNMARK_COMMAND:
+                    handleMark(firstWord, input);
+                    break;
+                case LIST_COMMAND:
+                    showTasks();
+                    break;
+                default:
+                    printDivider();
+                    System.out.println("sorry :c i don't know what you mean by " + input);
+                    printDivider();
+                }
+            } catch (IllegalArgumentException e) {
+                printDivider();
+                System.out.println(e.getMessage());
+                printDivider();
             }
         }
     }
