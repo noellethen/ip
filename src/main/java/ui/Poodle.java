@@ -1,3 +1,10 @@
+package ui;
+
+import task.Deadline;
+import task.Event;
+import task.Task;
+import task.Todo;
+import exception.PoodleException;
 import java.util.Scanner;
 
 public class Poodle {
