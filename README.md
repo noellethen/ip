@@ -1,4 +1,4 @@
-# ui.Poodle project template
+# Poodle project template
 
 This is a project template for a greenfield Java project. It's named after my late pet dog _Poodle_. Given below are instructions on how to use it.
 
