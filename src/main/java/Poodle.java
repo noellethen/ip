@@ -37,31 +37,35 @@ public class Poodle {
     private static final int SLASH_TO_LENGTH = 4;
 
     private static void handleMark(String firstWord, String input) {
-        try {
-            int firstSpaceIndex = input.indexOf(' ');
-            int taskNumber = Integer.parseInt(input.substring(firstSpaceIndex + 1));
-            if (taskNumber < 1 || taskNumber > Task.getTaskCount()) {
-                System.out.println("which task is that? >< from 1-100 pls!");
-                return;
-            }
+        int firstSpaceIndex = input.indexOf(' ');
+        if (firstSpaceIndex == -1) {
+            throw PoodleException.missingArgumentException(firstWord);
+        }
 
-            Task task = Task.getTaskList()[taskNumber - 1];
-            if (firstWord.equals(MARK_COMMAND)) {
-                task.markAsDone();
-                printDivider();
-                System.out.println("yay good job! the task is done c:");
-                System.out.println(" " + task);
-                printDivider();
-            } else if (firstWord.equals(UNMARK_COMMAND)) {
-                task.unmarkAsDone();
-                printDivider();
-                System.out.println("oh nooo go do your task :c");
-                System.out.println(" " + task);
-                printDivider();
-            }
+        int taskNumber;
+        try {
+            taskNumber = Integer.parseInt(input.substring(firstSpaceIndex + 1));
         } catch (NumberFormatException e) {
+            throw PoodleException.missingArgumentException(firstWord);
+        }
+
+        int count = Task.getTaskCount();
+        if (taskNumber < 1 || taskNumber > count) {
+            throw PoodleException.outOfRangeException();
+        }
+
+        Task task = Task.getTaskList()[taskNumber - 1];
+        if (firstWord.equals(MARK_COMMAND)) {
+            task.markAsDone();
             printDivider();
-            System.out.println("enter something like this: mark 2");
+            System.out.println("yay good job! the task is done c:");
+            System.out.println(" " + task);
+            printDivider();
+        } else if (firstWord.equals(UNMARK_COMMAND)) {
+            task.unmarkAsDone();
+            printDivider();
+            System.out.println("oh nooo go do your task :c");
+            System.out.println(" " + task);
             printDivider();
         }
     }
@@ -70,10 +74,13 @@ public class Poodle {
         int firstSpaceIndex = input.indexOf(' ') + 1;
 
         if (firstSpaceIndex == 0) {
-            throw new IllegalArgumentException("todo what?? input something after todo!");
+            throw PoodleException.missingArgumentException(TODO_COMMAND);
         }
 
-        String description = input.substring(firstSpaceIndex);
+        String description = input.substring(firstSpaceIndex).trim();
+        if (description.isEmpty()) {
+            throw PoodleException.missingArgumentException(TODO_COMMAND);
+        }
         return new Todo(description);
     }
 
@@ -81,12 +88,20 @@ public class Poodle {
         int firstSpaceIndex = input.indexOf(' ') + 1;
 
         if (firstSpaceIndex == 0) {
-            throw new IllegalArgumentException("what has a deadline?? input something after deadline!");
+            throw PoodleException.missingArgumentException(DEADLINE_COMMAND);
         }
 
         int byIndex = input.indexOf("/by");
-        String by = input.substring(byIndex + SLASH_BY_LENGTH);
-        String description = input.substring(firstSpaceIndex, byIndex - 1);
+        if (byIndex == -1) {
+            throw PoodleException.wrongFormatException(
+                    "type something like this: deadline <description> /by <when>!");
+        }
+
+        String by = input.substring(byIndex + SLASH_BY_LENGTH).trim();
+        String description = input.substring(firstSpaceIndex, byIndex - 1).trim();
+        if (description.isEmpty() || by.isEmpty()) {
+            throw PoodleException.missingArgumentException(DEADLINE_COMMAND);
+        }
 
         return new Deadline(description, by);
 
@@ -96,14 +111,22 @@ public class Poodle {
         int firstSpaceIndex = input.indexOf(' ') + 1;
 
         if (firstSpaceIndex == 0) {
-            throw new IllegalArgumentException("what event?? input something after event!");
+            throw PoodleException.missingArgumentException(EVENT_COMMAND);
         }
 
         int fromIndex = input.indexOf("/from");
         int toIndex = input.indexOf("/to");
-        String from = input.substring(fromIndex + SLASH_FROM_LENGTH, toIndex - 1);
-        String to = input.substring(toIndex + SLASH_TO_LENGTH);
-        String description = input.substring(firstSpaceIndex, fromIndex - 1);
+        if (fromIndex == -1 || toIndex == -1 || toIndex < fromIndex) {
+            throw PoodleException.wrongFormatException(
+                    "type something like this: event <description> /from <start> /to <end>!");
+        }
+
+        String from = input.substring(fromIndex + SLASH_FROM_LENGTH, toIndex - 1).trim();
+        String to = input.substring(toIndex + SLASH_TO_LENGTH).trim();
+        String description = input.substring(firstSpaceIndex, fromIndex - 1).trim();
+        if  (description.isEmpty() ||  to.isEmpty() || from.isEmpty()) {
+            throw PoodleException.missingArgumentException(EVENT_COMMAND);
+        }
 
         return new Event(description, from, to);
     }
@@ -178,11 +201,9 @@ public class Poodle {
                     showTasks();
                     break;
                 default:
-                    printDivider();
-                    System.out.println("sorry :c i don't know what you mean by " + input);
-                    printDivider();
+                    throw PoodleException.unknownCommandException(input);
                 }
-            } catch (IllegalArgumentException e) {
+            } catch (PoodleException e) {
                 printDivider();
                 System.out.println(e.getMessage());
                 printDivider();
