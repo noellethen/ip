@@ -51,7 +51,7 @@ public class Poodle {
 
         int count = Task.getTaskCount();
         if (taskNumber < 1 || taskNumber > count) {
-            throw PoodleException.outOfRangeException();
+            throw PoodleException.outOfRangeException(count);
         }
 
         Task task = Task.getTaskList()[taskNumber - 1];

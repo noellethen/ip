@@ -32,8 +32,8 @@ public class PoodleException extends RuntimeException {
         return new PoodleException(Code.WRONG_ARGUMENT, input);
     }
 
-    public static PoodleException outOfRangeException() {
+    public static PoodleException outOfRangeException(int count) {
         return new PoodleException(Code.OUT_OF_RANGE,
-                "which task is that? >< from 1-100 pls!");
+                "which task is that? >< from 1-" + count + " pls!");
     }
 }
