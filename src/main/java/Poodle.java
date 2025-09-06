@@ -1,7 +1,6 @@
 import java.util.Scanner;
 
 public class Poodle {
-
     // Text for greet and exit messages
     private static final String DIVIDER = "--------------------------------------------";
     private static final String ENTRY_TEXT = """
@@ -38,73 +37,112 @@ public class Poodle {
     private static final int SLASH_TO_LENGTH = 4;
 
     private static void handleMark(String firstWord, String input) {
-        try {
-            int firstSpaceIndex = input.indexOf(' ');
-            int taskNumber = Integer.parseInt(input.substring(firstSpaceIndex + 1));
-            if (taskNumber < 1 || taskNumber > Task.getTaskCount()) {
-                System.out.println("which task is that? >< from 1-100 pls!");
-                return;
-            }
+        int firstSpaceIndex = input.indexOf(' ');
+        if (firstSpaceIndex == -1) {
+            throw PoodleException.missingArgumentException(firstWord);
+        }
 
-            Task t = Task.getTaskList()[taskNumber - 1];
-            if (firstWord.equals(MARK_COMMAND)) {
-                t.markAsDone();
-                printDivider();
-                System.out.println("yay good job! the task is done c:");
-                System.out.println(" " + t);
-                printDivider();
-            } else if (firstWord.equals(UNMARK_COMMAND)) {
-                t.unmarkAsDone();
-                printDivider();
-                System.out.println("oh nooo go do your task :c");
-                System.out.println(" " + t);
-                printDivider();
-            }
+        int taskNumber;
+        try {
+            taskNumber = Integer.parseInt(input.substring(firstSpaceIndex + 1));
         } catch (NumberFormatException e) {
-            System.out.println("enter something like this: mark 2");
+            throw PoodleException.missingArgumentException(firstWord);
+        }
+
+        int count = Task.getTaskCount();
+        if (taskNumber < 1 || taskNumber > count) {
+            throw PoodleException.outOfRangeException(count);
+        }
+
+        Task task = Task.getTaskList()[taskNumber - 1];
+        if (firstWord.equals(MARK_COMMAND)) {
+            task.markAsDone();
+            printDivider();
+            System.out.println("yay good job! the task is done c:");
+            System.out.println(" " + task);
+            printDivider();
+        } else if (firstWord.equals(UNMARK_COMMAND)) {
+            task.unmarkAsDone();
+            printDivider();
+            System.out.println("oh nooo go do your task :c");
+            System.out.println(" " + task);
+            printDivider();
         }
     }
 
     private static Todo processTodo(String input) {
-        int firstSpaceIndex = input.indexOf(' ');
-        String description = input.substring(firstSpaceIndex + 1);
+        int firstSpaceIndex = input.indexOf(' ') + 1;
 
+        if (firstSpaceIndex == 0) {
+            throw PoodleException.missingArgumentException(TODO_COMMAND);
+        }
+
+        String description = input.substring(firstSpaceIndex).trim();
+        if (description.isEmpty()) {
+            throw PoodleException.missingArgumentException(TODO_COMMAND);
+        }
         return new Todo(description);
     }
 
     private static Deadline processDeadline(String input) {
-        int firstSpaceIndex = input.indexOf(' ');
+        int firstSpaceIndex = input.indexOf(' ') + 1;
+
+        if (firstSpaceIndex == 0) {
+            throw PoodleException.missingArgumentException(DEADLINE_COMMAND);
+        }
+
         int byIndex = input.indexOf("/by");
-        String by = input.substring(byIndex + SLASH_BY_LENGTH);
-        String description = input.substring(firstSpaceIndex + 1, byIndex - 1);
+        if (byIndex == -1) {
+            throw PoodleException.wrongFormatException(
+                    "type something like this: deadline <description> /by <when>!");
+        }
+
+        String by = input.substring(byIndex + SLASH_BY_LENGTH).trim();
+        String description = input.substring(firstSpaceIndex, byIndex - 1).trim();
+        if (description.isEmpty() || by.isEmpty()) {
+            throw PoodleException.missingArgumentException(DEADLINE_COMMAND);
+        }
 
         return new Deadline(description, by);
 
     }
 
     private static Event processEvent(String input) {
-        int firstSpaceIndex = input.indexOf(' ');
+        int firstSpaceIndex = input.indexOf(' ') + 1;
+
+        if (firstSpaceIndex == 0) {
+            throw PoodleException.missingArgumentException(EVENT_COMMAND);
+        }
+
         int fromIndex = input.indexOf("/from");
         int toIndex = input.indexOf("/to");
-        String from = input.substring(fromIndex + SLASH_FROM_LENGTH, toIndex - 1);
-        String to = input.substring(toIndex + SLASH_TO_LENGTH);
-        String description = input.substring(firstSpaceIndex + 1, fromIndex - 1);
+        if (fromIndex == -1 || toIndex == -1 || toIndex < fromIndex) {
+            throw PoodleException.wrongFormatException(
+                    "type something like this: event <description> /from <start> /to <end>!");
+        }
+
+        String from = input.substring(fromIndex + SLASH_FROM_LENGTH, toIndex - 1).trim();
+        String to = input.substring(toIndex + SLASH_TO_LENGTH).trim();
+        String description = input.substring(firstSpaceIndex, fromIndex - 1).trim();
+        if  (description.isEmpty() ||  to.isEmpty() || from.isEmpty()) {
+            throw PoodleException.missingArgumentException(EVENT_COMMAND);
+        }
 
         return new Event(description, from, to);
     }
 
     private static void processTasks(String firstWord, String input) {
-        Task t = null;
+        Task task = null;
 
         switch (firstWord) {
         case TODO_COMMAND:
-            t = processTodo(input);
+            task = processTodo(input);
             break;
         case DEADLINE_COMMAND:
-            t = processDeadline(input);
+            task = processDeadline(input);
             break;
         case EVENT_COMMAND:
-            t = processEvent(input);
+            task = processEvent(input);
             break;
         default:
             System.out.println("what do you want me to do for you?");
@@ -112,7 +150,7 @@ public class Poodle {
 
         printDivider();
         System.out.println("okie i added your task:");
-        System.out.println(t);
+        System.out.println(task);
         System.out.println("now you have " + Task.getTaskCount() + " tasks to dooo");
         printDivider();
     }
@@ -138,12 +176,6 @@ public class Poodle {
         System.out.println(DIVIDER);
     }
 
-    private static void echo(String input) {
-        printDivider();
-        System.out.println(input);
-        printDivider();
-    }
-
     private static void runPoodle() {
         Scanner sc = new Scanner(System.in);
         String input;
@@ -153,23 +185,28 @@ public class Poodle {
             if (EXIT_COMMAND.equals(input)) {
                 break;
             }
-
-            String firstWord = returnFirstWord(input);
-            switch (firstWord) {
-            case TODO_COMMAND:
-            case DEADLINE_COMMAND:
-            case EVENT_COMMAND:
-                processTasks(firstWord, input);
-                break;
-            case MARK_COMMAND:
-            case UNMARK_COMMAND:
-                handleMark(firstWord, input);
-                break;
-            case LIST_COMMAND:
-                showTasks();
-                break;
-            default:
-                echo(input);
+            try {
+                String firstWord = returnFirstWord(input);
+                switch (firstWord) {
+                case TODO_COMMAND:
+                case DEADLINE_COMMAND:
+                case EVENT_COMMAND:
+                    processTasks(firstWord, input);
+                    break;
+                case MARK_COMMAND:
+                case UNMARK_COMMAND:
+                    handleMark(firstWord, input);
+                    break;
+                case LIST_COMMAND:
+                    showTasks();
+                    break;
+                default:
+                    throw PoodleException.unknownCommandException(input);
+                }
+            } catch (PoodleException e) {
+                printDivider();
+                System.out.println(e.getMessage());
+                printDivider();
             }
         }
     }
