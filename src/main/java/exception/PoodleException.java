@@ -1,3 +1,5 @@
+package exception;
+
 public class PoodleException extends RuntimeException {
 
     public enum Code {
