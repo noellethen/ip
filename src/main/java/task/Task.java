@@ -1,18 +1,20 @@
 package task;
 
+import java.util.ArrayList;
+
 public class Task {
     private final String description;
     protected boolean isDone;
-    private static int taskCount = 0;
-
-    private static final int MAX_TASKS = 100;
-    private static Task[] taskList = new Task[MAX_TASKS];
+    private static final ArrayList<Task> taskList = new ArrayList<>();
 
     public Task(String description) {
         this.description = description;
         this.isDone = false;
-        taskList[taskCount] = this;
-        taskCount++;
+        taskList.add(this);
+    }
+
+    public void removeTask() {
+        taskList.remove(this);
     }
 
     public void markAsDone() {
@@ -24,10 +26,10 @@ public class Task {
     }
 
     public static int getTaskCount() {
-        return taskCount;
+        return taskList.size();
     }
 
-    public static Task[] getTaskList() {
+    public static ArrayList<Task> getTaskList() {
         return taskList;
     }
 
