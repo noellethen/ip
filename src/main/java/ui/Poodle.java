@@ -6,6 +6,7 @@ import task.Task;
 import task.Todo;
 import exception.PoodleException;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Poodle {
     // Text for greet and exit messages
@@ -39,6 +40,8 @@ public class Poodle {
     private static final String TODO_COMMAND = "todo";
     private static final String DEADLINE_COMMAND = "deadline";
     private static final String EVENT_COMMAND = "event";
+    private static final String DELETE_COMMAND = "delete";
+
     private static final int SLASH_BY_LENGTH = 4;
     private static final int SLASH_FROM_LENGTH = 6;
     private static final int SLASH_TO_LENGTH = 4;
@@ -61,7 +64,7 @@ public class Poodle {
             throw PoodleException.outOfRangeException(count);
         }
 
-        Task task = Task.getTaskList()[taskNumber - 1];
+        Task task = Task.getTaskList().get(taskNumber - 1);
         if (firstWord.equals(MARK_COMMAND)) {
             task.markAsDone();
             printDivider();
@@ -165,8 +168,25 @@ public class Poodle {
     private static void showTasks() {
         printDivider();
         for (int i = 1; i <= Task.getTaskCount(); i++) {
-            System.out.println(i + "." + Task.getTaskList()[i - 1]);
+            System.out.println(i + "." + Task.getTaskList().get(i - 1));
         }
+        printDivider();
+    }
+
+    private static void deleteTask(String input) {
+        int firstSpaceIndex = input.indexOf(' ') + 1;
+        int index = Integer.parseInt(input.substring(firstSpaceIndex)) - 1;
+
+        if (firstSpaceIndex == 0) {
+            throw PoodleException.missingArgumentException(DELETE_COMMAND);
+        }
+
+        Task task = Task.getTaskList().get(index);
+        task.removeTask();
+        printDivider();
+        System.out.println("okie i deleted your task:");
+        System.out.println(task);
+        System.out.println("now you have " + Task.getTaskCount() + " tasks left to dooo");
         printDivider();
     }
 
@@ -206,6 +226,9 @@ public class Poodle {
                     break;
                 case LIST_COMMAND:
                     showTasks();
+                    break;
+                case DELETE_COMMAND:
+                    deleteTask(input);
                     break;
                 default:
                     throw PoodleException.unknownCommandException(input);
