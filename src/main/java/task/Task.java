@@ -13,6 +13,10 @@ public class Task {
         taskList.add(this);
     }
 
+    public void removeTask() {
+        taskList.remove(this);
+    }
+
     public void markAsDone() {
         this.isDone = true;
     }
