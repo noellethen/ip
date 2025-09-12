@@ -1,15 +1,17 @@
 package ui;
 
+import storage.Storage;
 import task.Deadline;
 import task.Event;
 import task.Task;
 import task.Todo;
 import exception.PoodleException;
+
 import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Poodle {
-    // Text for greet and exit messages
+// Text for greet and exit messages
     private static final String DIVIDER = "--------------------------------------------";
     private static final String ENTRY_TEXT = """
             --------------------------------------------
@@ -45,6 +47,22 @@ public class Poodle {
     private static final int SLASH_BY_LENGTH = 4;
     private static final int SLASH_FROM_LENGTH = 6;
     private static final int SLASH_TO_LENGTH = 4;
+
+    private static void loadTasks() {
+        try {
+            Storage.loadTaskListFromFile();
+        } catch (PoodleException e) {
+            System.out.println("errorrrrrr: " + e.getMessage());
+        }
+    }
+
+    private static void saveTasks() {
+        try {
+            Storage.saveTaskListToFile();
+        }  catch (PoodleException e) {
+            System.out.println("errorrrrrr: " + e.getMessage());
+        }
+    }
 
     private static void handleMark(String firstWord, String input) {
         int firstSpaceIndex = input.indexOf(' ');
@@ -158,6 +176,8 @@ public class Poodle {
             System.out.println("what do you want me to do for you?");
         }
 
+        saveTasks();
+
         printDivider();
         System.out.println("okie i added your task:");
         System.out.println(task);
@@ -206,6 +226,8 @@ public class Poodle {
     private static void runPoodle() {
         Scanner sc = new Scanner(System.in);
         String input;
+
+        loadTasks();
 
         while (true) {
             input = sc.nextLine();

@@ -3,7 +3,7 @@ package task;
 import java.util.ArrayList;
 
 public class Task {
-    private final String description;
+    protected final String description;
     protected boolean isDone;
     private static final ArrayList<Task> taskList = new ArrayList<>();
 
@@ -31,6 +31,10 @@ public class Task {
 
     public static ArrayList<Task> getTaskList() {
         return taskList;
+    }
+
+    public String formatForSave() {
+        return (isDone ? "1" : "0") + " | " + description;
     }
 
     public String toString() {
