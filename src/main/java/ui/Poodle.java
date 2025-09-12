@@ -221,6 +221,6 @@ public class Poodle {
     public static void main(String[] args) {
         Printer.printEntryText();
         runPoodle();
-        Printer.printTaskList();
+        Printer.printExitText();
     }
 }
