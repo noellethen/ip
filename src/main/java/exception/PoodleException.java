@@ -6,7 +6,8 @@ public class PoodleException extends RuntimeException {
         UNKNOWN_COMMAND,
         MISSING_ARGUMENT,
         WRONG_ARGUMENT,
-        OUT_OF_RANGE
+        OUT_OF_RANGE,
+        FILE_ERROR
     }
 
     public PoodleException(Code code, String message) {
@@ -37,5 +38,9 @@ public class PoodleException extends RuntimeException {
     public static PoodleException outOfRangeException(int count) {
         return new PoodleException(Code.OUT_OF_RANGE,
                 "which task is that? >< from 1-" + count + " pls!");
+    }
+
+    public static PoodleException fileError(String message) {
+        return new PoodleException(Code.FILE_ERROR, "file error: " + message);
     }
 }
