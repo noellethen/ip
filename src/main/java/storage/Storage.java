@@ -26,7 +26,7 @@ public class Storage {
                 } else if (task instanceof Deadline deadline) {
                     taskLine = "D | " + task.formatForSave() + " | " + deadline.getBy();
                 } else if (task instanceof Event event) {
-                    taskLine = "E | " + task.formatForSave() + event.getFrom() + " to " + event.getTo();
+                    taskLine = "E | " + task.formatForSave() + " | " + event.getFrom() + " | " + event.getTo();
                 }
                 writer.write(taskLine + "\n");
             }

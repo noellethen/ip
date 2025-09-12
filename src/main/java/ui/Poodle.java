@@ -11,29 +11,6 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Poodle {
-// Text for greet and exit messages
-    private static final String DIVIDER = "--------------------------------------------";
-    private static final String ENTRY_TEXT = """
-            --------------------------------------------
-            hiiiiii from
-                       ╔╦╗
-                       ║║║
-            ╔══╦══╦══╦═╝║║╔══╗
-            ║╔╗║╔╗║╔╗║╔╗║║║║═╣
-            ║╚╝║╚╝║╚╝║╚╝║╚╣║═╣
-            ║╔═╩══╩══╩══╩═╩══╝
-            ║║
-            ╚╝
-    
-            is there anything i can do for you?
-            --------------------------------------------
-            """;
-    private static final String EXIT_TEXT = """
-            --------------------------------------------
-            awwwww bye :c hope to see you again soon! <3
-            --------------------------------------------
-            """;
-
     // Commands
     private static final String LIST_COMMAND = "list";
     private static final String MARK_COMMAND = "mark";
@@ -85,16 +62,10 @@ public class Poodle {
         Task task = Task.getTaskList().get(taskNumber - 1);
         if (firstWord.equals(MARK_COMMAND)) {
             task.markAsDone();
-            printDivider();
-            System.out.println("yay good job! the task is done c:");
-            System.out.println(" " + task);
-            printDivider();
+            Printer.printTaskMarkedAsDone(task);
         } else if (firstWord.equals(UNMARK_COMMAND)) {
             task.unmarkAsDone();
-            printDivider();
-            System.out.println("oh nooo go do your task :c");
-            System.out.println(" " + task);
-            printDivider();
+            Printer.printTaskUnmarked(task);
         }
     }
 
@@ -178,19 +149,11 @@ public class Poodle {
 
         saveTasks();
 
-        printDivider();
-        System.out.println("okie i added your task:");
-        System.out.println(task);
-        System.out.println("now you have " + Task.getTaskCount() + " tasks to dooo");
-        printDivider();
+        Printer.printTaskAdded(task);
     }
 
     private static void showTasks() {
-        printDivider();
-        for (int i = 1; i <= Task.getTaskCount(); i++) {
-            System.out.println(i + "." + Task.getTaskList().get(i - 1));
-        }
-        printDivider();
+        Printer.printTaskList();
     }
 
     private static void deleteTask(String input) {
@@ -203,11 +166,9 @@ public class Poodle {
 
         Task task = Task.getTaskList().get(index);
         task.removeTask();
-        printDivider();
-        System.out.println("okie i deleted your task:");
-        System.out.println(task);
-        System.out.println("now you have " + Task.getTaskCount() + " tasks left to dooo");
-        printDivider();
+        saveTasks();
+
+        Printer.printTaskDeleted(task);
     }
 
     private static String returnFirstWord(String input) {
@@ -217,10 +178,6 @@ public class Poodle {
         } else {
             return input;
         }
-    }
-
-    private static void printDivider() {
-        System.out.println(DIVIDER);
     }
 
     private static void runPoodle() {
@@ -256,16 +213,14 @@ public class Poodle {
                     throw PoodleException.unknownCommandException(input);
                 }
             } catch (PoodleException e) {
-                printDivider();
-                System.out.println(e.getMessage());
-                printDivider();
+                Printer.printErrorMessage(e.getMessage());
             }
         }
     }
 
     public static void main(String[] args) {
-        System.out.println(ENTRY_TEXT);
+        Printer.printEntryText();
         runPoodle();
-        System.out.println(EXIT_TEXT);
+        Printer.printTaskList();
     }
 }
