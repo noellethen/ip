@@ -1,2 +1,2 @@
 T | 0 | homework
-E | 0 | cs2113 | 4pm | 6pm
+D | 0 | homework | Sunday

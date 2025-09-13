@@ -41,6 +41,6 @@ public class PoodleException extends RuntimeException {
     }
 
     public static PoodleException fileError(String message) {
-        return new PoodleException(Code.FILE_ERROR, "file error: " + message);
+        return new PoodleException(Code.FILE_ERROR, message);
     }
 }

@@ -15,7 +15,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Storage {
-    private static final String DATA_FILE_PATH = "./data/Poodle.txt";
+    private static final String DATA_FILE_PATH = "data/Poodle.txt";
 
     public static void saveTaskListToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(DATA_FILE_PATH, false))) {
@@ -39,13 +39,18 @@ public class Storage {
         File file = new File(DATA_FILE_PATH);
 
         if (!file.exists()) {
-            throw PoodleException.fileError("i'm recording the tasks in a separate file! but it can't be found... so i'll start a new one!");
+            try {
+                boolean created = file.createNewFile();
+                if (!created) {
+                    throw PoodleException.fileError("failed to create a new file T-T");
+                }
+            } catch (IOException e) {
+                throw PoodleException.fileError("i'm trying to create the file, but it failed :c: " + e.getMessage());
+            }
         }
 
         try (Scanner scanner = new Scanner(file)) {
-            Task.getTaskList().clear();
-
-            while (scanner.hasNextLine()) {
+            while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 String[] parts = line.split(" \\| ");
                 String type = parts[0].trim();
