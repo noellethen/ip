@@ -17,6 +17,10 @@ public class Task {
         taskList.remove(this);
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void markAsDone() {
         this.isDone = true;
     }

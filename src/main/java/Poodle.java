@@ -42,6 +42,9 @@ public class Poodle {
                 case Ui.DELETE_COMMAND:
                     taskList.deleteTask(input);
                     break;
+                case Ui.FIND_COMMAND:
+                    taskList.findTasks(input);
+                    break;
                 default:
                     throw PoodleException.unknownCommandException(input);
                 }

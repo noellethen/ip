@@ -1,6 +1,7 @@
 package ui;
 
 import task.Task;
+
 import java.util.Scanner;
 
 public class Ui {
@@ -14,6 +15,7 @@ public class Ui {
     public static final String DEADLINE_COMMAND = "deadline";
     public static final String EVENT_COMMAND = "event";
     public static final String DELETE_COMMAND = "delete";
+    public static final String FIND_COMMAND = "find";
 
     public static final int SLASH_BY_LENGTH = 4;
     public static final int SLASH_FROM_LENGTH = 6;
@@ -98,6 +100,15 @@ public class Ui {
         System.out.println("okie i deleted your task:");
         System.out.println(task);
         System.out.println("now you have " + Task.getTaskCount() + " tasks left to dooo");
+        printDivider();
+    }
+
+    public void printTasksFound(String[] list) {
+        printDivider();
+        System.out.println("yay here are the tasks i found: ");
+        for (int i = 0; i < list.length - 1; i++) {
+            System.out.println(list[i]);
+        }
         printDivider();
     }
 
