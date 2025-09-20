@@ -4,11 +4,21 @@ import exception.PoodleException;
 import task.TaskList;
 import ui.Ui;
 
+/**
+ * Main class for the Poodle application.
+ * Handles the flow of task management operations including adding, marking, unmarking,
+ * deleting, listing, and finding tasks.
+ */
 public class Poodle {
 
     private static final Ui ui = new Ui();
     private static final TaskList taskList = new TaskList(ui);
 
+    /**
+     * Processes a task based on the given first word and input string.
+     * @param firstWord the first word of the user input, which determines the task type.
+     * @param input the full input string containing task details.
+     */
     private static void processTasks(String firstWord, String input) {
         Task task = Parser.parseTask(firstWord, input);
 
@@ -16,6 +26,10 @@ public class Poodle {
         ui.printTaskAdded(task);
     }
 
+    /**
+     * Runs the Poodle task management application.
+     * Continuously accepts user input to perform task management operations.
+     */
     private static void runPoodle() {
         taskList.loadTasks();
 
@@ -54,6 +68,11 @@ public class Poodle {
         }
     }
 
+    /**
+     * Main method to start the Poodle application.
+     * Prints entry text and runs the task management system.
+     * @param args command-line arguments (not used).
+     */
     public static void main(String[] args) {
         ui.printEntryText();
         runPoodle();

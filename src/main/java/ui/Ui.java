@@ -1,9 +1,12 @@
 package ui;
 
 import task.Task;
-
 import java.util.Scanner;
 
+/**
+ * User interface class for interacting with the user.
+ * Handles input and output operations such as printing messages and getting user input.
+ */
 public class Ui {
 
     private static final String DIVIDER = "--------------------------------------------";
@@ -21,10 +24,16 @@ public class Ui {
     public static final int SLASH_FROM_LENGTH = 6;
     public static final int SLASH_TO_LENGTH = 4;
 
+    /**
+     * Prints a divider line.
+     */
     public void printDivider() {
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Prints the entry text to the console when the program starts.
+     */
     public void printEntryText() {
         System.out.println("""
             --------------------------------------------
@@ -43,6 +52,9 @@ public class Ui {
             """);
     }
 
+    /**
+     * Prints the exit text to the console when the program ends.
+     */
     public void printExitText() {
         System.out.println("""
             --------------------------------------------
@@ -53,18 +65,33 @@ public class Ui {
 
     private Scanner sc;
 
+    /**
+     * Constructor for the Ui class. Initializes the scanner for reading user input.
+     */
     public Ui() {
         this.sc = new Scanner(System.in);
     }
 
+    /**
+     * Gets the user input from the console.
+     * @return the user input as a String.
+     */
     public String getUserInput() {
         return sc.nextLine();
     }
 
+    /**
+     * Prints a message to the console.
+     * @param message the message to be printed.
+     */
     public void printMessage(String message) {
         System.out.println(message);
     }
 
+    /**
+     * Prints a task that has been added to the task list.
+     * @param task the task that was added.
+     */
     public void printTaskAdded(Task task) {
         printDivider();
         System.out.println("okie i added your task:");
@@ -73,6 +100,9 @@ public class Ui {
         printDivider();
     }
 
+    /**
+     * Prints the list of tasks.
+     */
     public void printTaskList() {
         printDivider();
         for (int i = 1; i <= Task.getTaskCount(); i++) {
@@ -81,6 +111,10 @@ public class Ui {
         printDivider();
     }
 
+    /**
+     * Prints a task that has been marked as done.
+     * @param task the task that was marked as done.
+     */
     public void printTaskMarkedAsDone(Task task) {
         printDivider();
         System.out.println("yay good job! the task is done c:");
@@ -88,6 +122,10 @@ public class Ui {
         printDivider();
     }
 
+    /**
+     * Prints a task that has been unmarked.
+     * @param task the task that was unmarked.
+     */
     public void printTaskUnmarked(Task task) {
         printDivider();
         System.out.println("oh nooo go do your task :c");
@@ -95,6 +133,10 @@ public class Ui {
         printDivider();
     }
 
+    /**
+     * Prints a task that has been deleted from the task list.
+     * @param task the task that was deleted.
+     */
     public void printTaskDeleted(Task task) {
         printDivider();
         System.out.println("okie i deleted your task:");
@@ -103,6 +145,10 @@ public class Ui {
         printDivider();
     }
 
+    /**
+     * Prints a list of tasks found that match the search criteria.
+     * @param list the list of tasks found.
+     */
     public void printTasksFound(String[] list) {
         printDivider();
         System.out.println("yay here are the tasks i found: ");
@@ -112,6 +158,11 @@ public class Ui {
         printDivider();
     }
 
+
+    /**
+     * Prints an error message to the console.
+     * @param message the error message to be printed.
+     */
     public void printErrorMessage(String message) {
         printDivider();
         System.out.println(message);

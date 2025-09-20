@@ -4,17 +4,28 @@ import exception.PoodleException;
 import parser.Parser;
 import storage.Storage;
 import ui.Ui;
-
 import java.util.ArrayList;
 
+/**
+ * A class for managing a list of tasks.
+ * It provides methods for loading, saving, and modifying tasks, including marking, unmarking,
+ * deleting, listing, and finding tasks.
+ */
 public class TaskList {
 
     private final Ui ui;
 
+    /**
+     * Constructor for TaskList.
+     * @param ui the user interface object to interact with the user.
+     */
     public TaskList(Ui ui) {
         this.ui = ui;
     }
 
+    /**
+     * Loads the task list from the saved file.
+     */
     public void loadTasks() {
         try {
             Storage.loadTaskListFromFile();
@@ -23,6 +34,9 @@ public class TaskList {
         }
     }
 
+    /**
+     * Saves the task list to the file.
+     */
     public void saveTasks() {
         try {
             Storage.saveTaskListToFile();
@@ -31,6 +45,11 @@ public class TaskList {
         }
     }
 
+    /**
+     * Handles marking or unmarking a task based on the input.
+     * @param firstWord the command (mark/unmark).
+     * @param input the user input containing the task number.
+     */
     public void handleMark(String firstWord, String input) {
         int firstSpaceIndex = Parser.getFirstSpaceIndex(input);
         if (firstSpaceIndex == -1) {
@@ -59,6 +78,10 @@ public class TaskList {
         }
     }
 
+    /**
+     * Deletes a task based on the input.
+     * @param input the user input containing the task number to delete.
+     */
     public void deleteTask(String input) {
         int firstSpaceIndex = Parser.getFirstSpaceIndex(input);
 
@@ -74,10 +97,17 @@ public class TaskList {
         ui.printTaskDeleted(task);
     }
 
+    /**
+     * Displays all tasks in the task list.
+     */
     public void showTasks() {
         ui.printTaskList();
     }
 
+    /**
+     * Finds tasks that contain the given keyword in their description.
+     * @param input the user input containing the keyword to search for.
+     */
     public void findTasks(String input) {
         int firstSpaceIndex = Parser.getFirstSpaceIndex(input);
 
