@@ -5,6 +5,8 @@ import parser.Parser;
 import storage.Storage;
 import ui.Ui;
 
+import java.util.ArrayList;
+
 public class TaskList {
 
     private final Ui ui;
@@ -74,5 +76,40 @@ public class TaskList {
 
     public void showTasks() {
         ui.printTaskList();
+    }
+
+    public void findTasks(String input) {
+        int firstSpaceIndex = Parser.getFirstSpaceIndex(input);
+
+        if (firstSpaceIndex == 0) {
+            throw PoodleException.missingArgumentException(Ui.FIND_COMMAND);
+        }
+
+        String keyword = input.substring(firstSpaceIndex).trim();
+
+        if (keyword.isEmpty()) {
+            throw PoodleException.missingArgumentException(Ui.FIND_COMMAND);
+        }
+
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (Task task : Task.getTaskList()) {
+            if (task.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+                matchingTasks.add(task);
+            }
+        }
+
+        if (matchingTasks.isEmpty()) {
+            ui.printDivider();
+            System.out.println("couldn't find any tasks with " + keyword + " in it :c");
+            ui.printDivider();
+            return;
+        }
+
+        String[] result = new String[matchingTasks.size() + 1];
+        for (int i = 0; i < matchingTasks.size(); i++) {
+            result[i] = (i + 1) + ". " + matchingTasks.get(i);
+        }
+
+        ui.printTasksFound(result);
     }
 }
