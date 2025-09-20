@@ -14,9 +14,17 @@ import java.io.FileNotFoundException;
 
 import java.util.Scanner;
 
+/**
+ * A class for handling file storage operations, including saving and loading task data.
+ * It manages reading from and writing to a file for persistent task storage.
+ */
 public class Storage {
     private static final String DATA_FILE_PATH = "data/Poodle.txt";
 
+    /**
+     * Saves the task list to a file.
+     * Each task is formatted and written to the file in a structured format.
+     */
     public static void saveTaskListToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(DATA_FILE_PATH, false))) {
             for (Task task : Task.getTaskList()) {
@@ -35,6 +43,11 @@ public class Storage {
         }
     }
 
+    /**
+     * Loads the task list from a file.
+     * If the file doesn't exist, it creates a new one.
+     * The task data is read and parsed into task objects.
+     */
     public static void loadTaskListFromFile() {
         File file = new File(DATA_FILE_PATH);
 

@@ -7,8 +7,17 @@ import task.Task;
 import task.Todo;
 import ui.Ui;
 
+/**
+ * A parser class for handling user input commands.
+ * It processes various task types such as Todo, Deadline, and Event.
+ */
 public class Parser {
 
+    /**
+     * Returns the first word from the input string, which represents the command.
+     * @param input the full input string from the user.
+     * @return the first word of the input string.
+     */
     public static String returnFirstWord(String input) {
         int firstSpaceIndex = getFirstSpaceIndex(input);
         if (firstSpaceIndex != 0) {
@@ -22,6 +31,12 @@ public class Parser {
         return input.indexOf(' ') + 1;
     }
 
+    /**
+     * Processes the input string to create a Todo task.
+     * @param input the user input containing the task description.
+     * @return a new Todo task.
+     * @throws PoodleException if the input format is invalid.
+     */
     public static Todo processTodo(String input) {
         int firstSpaceIndex = getFirstSpaceIndex(input.trim());
 
@@ -36,6 +51,12 @@ public class Parser {
         return new Todo(description);
     }
 
+    /**
+     * Processes the input string to create a Deadline task.
+     * @param input the user input containing the task description and deadline.
+     * @return a new Deadline task.
+     * @throws PoodleException if the input format is invalid.
+     */
     public static Deadline processDeadline(String input) {
         int firstSpaceIndex = getFirstSpaceIndex(input);
 
@@ -59,7 +80,13 @@ public class Parser {
 
     }
 
-    private static Event processEvent(String input) {
+    /**
+     * Processes the input string to create an Event task.
+     * @param input the user input containing the task description, start time, and end time.
+     * @return a new Event task.
+     * @throws PoodleException if the input format is invalid.
+     */
+    public static Event processEvent(String input) {
         int firstSpaceIndex = getFirstSpaceIndex(input);
 
         if (firstSpaceIndex == 0) {
@@ -83,6 +110,13 @@ public class Parser {
         return new Event(description, from, to);
     }
 
+    /**
+     * Parses the task based on the first word of the input command.
+     * @param firstWord the first word from the user input.
+     * @param input the full user input.
+     * @return the corresponding Task object (Todo, Deadline, or Event).
+     * @throws PoodleException if the command is unknown.
+     */
     public static Task parseTask(String firstWord, String input) {
         switch (firstWord) {
         case Ui.TODO_COMMAND:
