@@ -1,4 +1,4 @@
-# ui.Poodle User Guide
+# Poodle User Guide
 
 // Update the title above to match the actual product name
 

@@ -1,2 +1,1 @@
-T | 0 | homework
-D | 0 | homework | Sunday
+D | 1 | cs2113 homework | Sunday

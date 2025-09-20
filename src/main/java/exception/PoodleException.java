@@ -25,6 +25,7 @@ public class PoodleException extends RuntimeException {
             case "deadline" -> "what has a deadline?? input something after deadline!";
             case "event" -> "what event?? input something after event!";
             case "mark", "unmark" -> "enter something like this: " + input + " 2";
+            case "delete" -> "enter something like this: " + input + " 3";
             default -> "missing arguments for command " + input;
         };
 
