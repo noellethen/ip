@@ -1,5 +1,6 @@
 # Poodle User Guide
 
+```
 hiiiiii from
            ╔╦╗
            ║║║
@@ -11,6 +12,7 @@ hiiiiii from
 ╚╝
 
 is there anything i can do for you?
+```
 
 Poodle is a friendly task management chatbot that helps you keep track of your todos, deadlines, and events. With its cute personality and simple command-based interface, Poodle makes task management both efficient and enjoyable!
 
