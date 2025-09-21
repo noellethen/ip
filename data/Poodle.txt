@@ -1,4 +1,1 @@
-D | 1 | cs2113 homework | Sunday
-T | 0 | read book
-D | 0 | finish reading book | Sunday
-E | 0 | book club | 3pm | 4pm
+T | 0 | homework

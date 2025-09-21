@@ -5,6 +5,7 @@ import task.Deadline;
 import task.Event;
 import task.Task;
 import task.Todo;
+import ui.Ui;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -51,12 +52,22 @@ public class Storage {
     public static void loadTaskListFromFile() {
         File file = new File(DATA_FILE_PATH);
 
+        File parentDir = file.getParentFile();
+        if (parentDir != null && !parentDir.exists()) {
+            if (!parentDir.mkdirs()) {
+                throw PoodleException.fileError("failed to create data directory!!");
+            }
+        }
+
         if (!file.exists()) {
             try {
                 boolean created = file.createNewFile();
                 if (!created) {
                     throw PoodleException.fileError("failed to create a new file T-T");
                 }
+                Ui.printDivider();
+                System.out.println("the .txt file to store your data doesn't exist, but i created a new one yay");
+                Ui.printDivider();
             } catch (IOException e) {
                 throw PoodleException.fileError("i'm trying to create the file, but it failed :c: " + e.getMessage());
             }
